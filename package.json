@@ -1,0 +1,27 @@
+{
+	"name": "blog-api",
+	"type": "module",
+	"scripts": {
+		"dev": "bun --watch src/index.ts",
+		"lint": "bun x @biomejs/biome check src",
+		"lint:fix": "bun lint --write",
+		"db:generate": "bun x drizzle-kit generate --config drizzle.config.ts",
+		"db:push": "bun x drizzle-kit push --config drizzle.config.ts",
+		"db:studio": "bun x drizzle-kit studio"
+	},
+	"dependencies": {
+		"@elysiajs/jwt": "^1.2.0",
+		"@elysiajs/swagger": "^1.2.2",
+		"@libsql/client": "^0.15.4",
+		"drizzle-orm": "^0.41.0",
+		"drizzle-typebox": "^0.3.2",
+		"elysia": "^1.2.25",
+		"env-var": "^7.5.0"
+	},
+	"devDependencies": {
+		"typescript": "^5.8.2",
+		"@types/bun": "^1.2.8",
+		"@biomejs/biome": "^1.9.4",
+		"drizzle-kit": "^0.30.6"
+	}
+}
