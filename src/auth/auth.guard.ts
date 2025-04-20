@@ -1,5 +1,6 @@
-import { AppError } from "@/common/errors";
 import type Elysia from "elysia";
+
+import { AppError } from "@/common/errors";
 import { COOKIE_OPTIONS, accessJwtSetup, refreshJwtSetup } from "./jwtSetup";
 
 export const authGuard = (app: Elysia) =>

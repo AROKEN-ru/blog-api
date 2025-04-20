@@ -1,12 +1,15 @@
+import cors from "@elysiajs/cors";
 import { swagger } from "@elysiajs/swagger";
-import { Elysia } from "elysia";
+import { logger } from "@tqman/nice-logger";
+import Elysia from "elysia";
 
 import { authController } from "@/auth/auth.controller";
 import { errorHandler } from "@/plugins/error-handler";
 import { usersController } from "@/users/users.controller";
 
 export const app = new Elysia()
-	.use(errorHandler)
+	.use(cors())
+	.use(logger())
 	.use(
 		swagger({
 			path: "/api/docs",
@@ -19,4 +22,5 @@ export const app = new Elysia()
 			},
 		}),
 	)
+	.use(errorHandler)
 	.group("/api", (app) => app.use(authController).use(usersController));

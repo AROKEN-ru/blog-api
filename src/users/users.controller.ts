@@ -1,5 +1,6 @@
-import { authGuard } from "@/auth/auth.guard";
 import Elysia from "elysia";
+
+import { authGuard } from "@/auth/auth.guard";
 
 export const usersController = new Elysia({
 	prefix: "/users",
@@ -7,5 +8,11 @@ export const usersController = new Elysia({
 })
 	.use(authGuard)
 	.get("/me", ({ user }) => {
-		return user;
+		return {
+			message: "User found",
+			user: {
+				id: user.id,
+				username: user.username,
+			},
+		};
 	});

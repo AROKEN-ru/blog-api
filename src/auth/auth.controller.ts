@@ -35,8 +35,11 @@ export const authController = new Elysia({
 
 			set.status = 201;
 			return {
-				id: user.id,
-				username: user.username,
+				message: "User created successfully",
+				user: {
+					id: user.id,
+					username: user.username,
+				},
 			};
 		},
 		{
@@ -66,11 +69,21 @@ export const authController = new Elysia({
 			});
 
 			return {
-				id: user.id,
-				username: user.username,
+				message: "Logged in successfully",
+				user: {
+					id: user.id,
+					username: user.username,
+				},
 			};
 		},
 		{
 			body: loginUser,
 		},
-	);
+	)
+	.post("/logout", ({ cookie }) => {
+		cookie.access_token.remove();
+		cookie.refresh_token.remove();
+		return {
+			message: "Logged out successfully",
+		};
+	});
