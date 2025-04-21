@@ -7,13 +7,21 @@ import { getAllPostsUseCase } from "./application/get-all-posts.usecase";
 import { updatePostByIdUseCase } from "./application/update-post-by-id.usecase";
 import { createPost, updatePost } from "./posts.schema";
 
-const publicRoutes = new Elysia().get("/", async () => {
-	const posts = await getAllPostsUseCase();
-	return {
-		message: "Posts fetched successfully",
-		posts,
-	};
-});
+const publicRoutes = new Elysia().get(
+	"/",
+	async () => {
+		const posts = await getAllPostsUseCase();
+		return {
+			message: "Posts fetched successfully",
+			posts,
+		};
+	},
+	{
+		detail: {
+			description: "Get all posts.",
+		},
+	},
+);
 
 const privateRoutes = new Elysia()
 	.use(authGuard)
@@ -28,14 +36,25 @@ const privateRoutes = new Elysia()
 		},
 		{
 			body: createPost,
+			detail: {
+				description: "Create a new post.",
+			},
 		},
 	)
-	.delete("/:id", async ({ params: { id }, user }) => {
-		await deletePostByIdUseCase(Number(id), Number(user.id));
-		return {
-			message: "Post deleted successfully",
-		};
-	})
+	.delete(
+		"/:id",
+		async ({ params: { id }, user }) => {
+			await deletePostByIdUseCase(Number(id), Number(user.id));
+			return {
+				message: "Post deleted successfully",
+			};
+		},
+		{
+			detail: {
+				description: "Delete a post by ID.",
+			},
+		},
+	)
 	.patch(
 		"/:id",
 		async ({ params: { id }, body, user }) => {
@@ -51,6 +70,9 @@ const privateRoutes = new Elysia()
 		},
 		{
 			body: updatePost,
+			detail: {
+				description: "Update a post by ID.",
+			},
 		},
 	);
 

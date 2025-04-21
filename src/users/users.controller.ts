@@ -7,12 +7,20 @@ export const usersController = new Elysia({
 	detail: { tags: ["Users"] },
 })
 	.use(authGuard)
-	.get("/me", ({ user }) => {
-		return {
-			message: "User found",
-			user: {
-				id: user.id,
-				username: user.username,
+	.get(
+		"/me",
+		({ user }) => {
+			return {
+				message: "User found",
+				user: {
+					id: user.id,
+					username: user.username,
+				},
+			};
+		},
+		{
+			detail: {
+				description: "Get the current user",
 			},
-		};
-	});
+		},
+	);

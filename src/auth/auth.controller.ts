@@ -44,6 +44,9 @@ export const authController = new Elysia({
 		},
 		{
 			body: createUser,
+			detail: {
+				description: "Create a new user and return the user object.",
+			},
 		},
 	)
 	.post(
@@ -78,12 +81,23 @@ export const authController = new Elysia({
 		},
 		{
 			body: loginUser,
+			detail: {
+				description: "Login a user and return the user object.",
+			},
 		},
 	)
-	.post("/logout", ({ cookie }) => {
-		cookie.access_token.remove();
-		cookie.refresh_token.remove();
-		return {
-			message: "Logged out successfully",
-		};
-	});
+	.post(
+		"/logout",
+		({ cookie }) => {
+			cookie.access_token.remove();
+			cookie.refresh_token.remove();
+			return {
+				message: "Logged out successfully",
+			};
+		},
+		{
+			detail: {
+				description: "Logout a user and remove the access and refresh tokens.",
+			},
+		},
+	);
