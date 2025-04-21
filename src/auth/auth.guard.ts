@@ -7,7 +7,7 @@ export const authGuard = (app: Elysia) =>
 	app
 		.use(accessJwtSetup)
 		.use(refreshJwtSetup)
-		.derive(async ({ cookie, accessJwt, refreshJwt, set }) => {
+		.derive(async ({ cookie, accessJwt, refreshJwt }) => {
 			const accessToken = cookie.access_token?.value;
 			const refreshToken = cookie.refresh_token?.value;
 

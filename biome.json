@@ -26,7 +26,8 @@
 				"noUselessTypeConstraint": "error",
 				"noWith": "error",
 				"noStaticOnlyClass": "off",
-				"noForEach": "off"
+				"noForEach": "off",
+				"noThisInStatic": "off"
 			},
 			"suspicious": {
 				"noExplicitAny": "off"

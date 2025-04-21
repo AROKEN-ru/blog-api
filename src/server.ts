@@ -6,6 +6,7 @@ import Elysia from "elysia";
 import { authController } from "@/auth/auth.controller";
 import { errorHandler } from "@/plugins/error-handler";
 import { usersController } from "@/users/users.controller";
+import { postsController } from "./posts/posts.controller";
 
 export const app = new Elysia()
 	.use(cors())
@@ -23,4 +24,6 @@ export const app = new Elysia()
 		}),
 	)
 	.use(errorHandler)
-	.group("/api", (app) => app.use(authController).use(usersController));
+	.group("/api", (app) =>
+		app.use(authController).use(usersController).use(postsController),
+	);
