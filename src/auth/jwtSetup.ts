@@ -18,13 +18,15 @@ export const refreshJwtSetup = jwt({
 export const COOKIE_OPTIONS = {
 	access: {
 		httpOnly: true,
-		sameSite: "strict",
+		sameSite: "lax",
+		secure: false,
 		path: "/",
 		maxAge: 60 * 15, // 15 minutes
 	},
 	refresh: {
 		httpOnly: true,
-		sameSite: "strict",
+		sameSite: "lax",
+		secure: false,
 		path: "/",
 		maxAge: 60 * 60 * 24 * 7, // 7 days
 	},

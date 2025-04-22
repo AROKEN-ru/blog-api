@@ -9,7 +9,11 @@ import { usersController } from "@/users/users.controller";
 import { postsController } from "./posts/posts.controller";
 
 export const app = new Elysia()
-	.use(cors())
+	.use(
+		cors({
+			credentials: true,
+		}),
+	)
 	.use(logger())
 	.use(
 		swagger({
