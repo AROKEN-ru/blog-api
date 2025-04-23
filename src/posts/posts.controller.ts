@@ -1,27 +1,47 @@
-import Elysia from "elysia";
+import Elysia, { t } from "elysia";
 
 import { authGuard } from "@/auth/auth.guard";
 import { createPostUseCase } from "./application/create-post.usecase";
 import { deletePostByIdUseCase } from "./application/delete-post-by-id.usecase";
 import { getAllPostsUseCase } from "./application/get-all-posts.usecase";
+import { getPostByIdUseCase } from "./application/get-post-by-id.usecase";
 import { updatePostByIdUseCase } from "./application/update-post-by-id.usecase";
 import { createPost, updatePost } from "./posts.schema";
 
-const publicRoutes = new Elysia().get(
-	"/",
-	async () => {
-		const posts = await getAllPostsUseCase();
-		return {
-			message: "Posts fetched successfully",
-			posts,
-		};
-	},
-	{
-		detail: {
-			description: "Get all posts.",
+const publicRoutes = new Elysia()
+	.get(
+		"/",
+		async () => {
+			const posts = await getAllPostsUseCase();
+			return {
+				message: "Posts fetched successfully",
+				posts,
+			};
 		},
-	},
-);
+		{
+			detail: {
+				description: "Get all posts.",
+			},
+		},
+	)
+	.get(
+		"/:id",
+		async ({ params: { id } }) => {
+			const post = await getPostByIdUseCase(id);
+			return {
+				message: "Post fetched successfully",
+				post,
+			};
+		},
+		{
+			params: t.Object({
+				id: t.Number(),
+			}),
+			detail: {
+				description: "Get a post by ID.",
+			},
+		},
+	);
 
 const privateRoutes = new Elysia()
 	.use(authGuard)
@@ -44,12 +64,15 @@ const privateRoutes = new Elysia()
 	.delete(
 		"/:id",
 		async ({ params: { id }, user }) => {
-			await deletePostByIdUseCase(Number(id), Number(user.id));
+			await deletePostByIdUseCase(id, Number(user.id));
 			return {
 				message: "Post deleted successfully",
 			};
 		},
 		{
+			params: t.Object({
+				id: t.Number(),
+			}),
 			detail: {
 				description: "Delete a post by ID.",
 			},
@@ -59,7 +82,7 @@ const privateRoutes = new Elysia()
 		"/:id",
 		async ({ params: { id }, body, user }) => {
 			const updatedPost = await updatePostByIdUseCase(
-				Number(id),
+				id,
 				Number(user.id),
 				body,
 			);
@@ -70,6 +93,9 @@ const privateRoutes = new Elysia()
 		},
 		{
 			body: updatePost,
+			params: t.Object({
+				id: t.Number(),
+			}),
 			detail: {
 				description: "Update a post by ID.",
 			},
