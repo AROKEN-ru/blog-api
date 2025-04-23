@@ -3,12 +3,10 @@ import Elysia from "elysia";
 import { createUser, loginUser } from "@/users/users.schema";
 import { loginUseCase } from "./application/login.usecase";
 import { registerUseCase } from "./application/register.usecase";
+import { authGuard } from "./auth.guard";
 import { COOKIE_OPTIONS, accessJwtSetup, refreshJwtSetup } from "./jwtSetup";
 
-export const authController = new Elysia({
-	prefix: "/auth",
-	detail: { tags: ["Auth"] },
-})
+const publicRoutes = new Elysia()
 	.use(accessJwtSetup)
 	.use(refreshJwtSetup)
 	.post(
@@ -85,19 +83,27 @@ export const authController = new Elysia({
 				description: "Login a user and return the user object.",
 			},
 		},
-	)
-	.post(
-		"/logout",
-		({ cookie }) => {
-			cookie.access_token.remove();
-			cookie.refresh_token.remove();
-			return {
-				message: "Logged out successfully",
-			};
-		},
-		{
-			detail: {
-				description: "Logout a user and remove the access and refresh tokens.",
-			},
-		},
 	);
+
+const privateRoutes = new Elysia().use(authGuard).post(
+	"/logout",
+	({ cookie }) => {
+		cookie.access_token.remove();
+		cookie.refresh_token.remove();
+		return {
+			message: "Logged out successfully",
+		};
+	},
+	{
+		detail: {
+			description: "Logout a user and remove the access and refresh tokens.",
+		},
+	},
+);
+
+export const authController = new Elysia({
+	prefix: "/auth",
+	detail: { tags: ["Auth"] },
+})
+	.use(publicRoutes)
+	.use(privateRoutes);
