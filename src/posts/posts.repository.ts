@@ -1,7 +1,8 @@
-import { desc, eq } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 
 import { AppError } from "@/common/errors";
 import { db } from "@/db";
+import type { PaginationRequest } from "@/types/pagination";
 import { usersTable } from "@/users/users.schema";
 import {
 	type CreatePostDTO,
@@ -23,7 +24,11 @@ export class PostsRepository {
 		return await this.selectPostWithAuthor(createdPost.id);
 	}
 
-	static async getAllPosts() {
+	static async getAllPosts({ page = 1, limit = 12 }: PaginationRequest) {
+		const maxLimit = 50;
+		const safeLimit = Math.min(limit, maxLimit);
+		const offset = (page - 1) * safeLimit;
+
 		const posts = await db
 			.select({
 				id: postsTable.id,
@@ -38,9 +43,25 @@ export class PostsRepository {
 			})
 			.from(postsTable)
 			.innerJoin(usersTable, eq(postsTable.userId, usersTable.id))
-			.orderBy(desc(postsTable.createdAt));
+			.orderBy(desc(postsTable.createdAt))
+			.limit(safeLimit)
+			.offset(offset);
 
-		return posts;
+		const totalPosts = await db
+			.select({ count: count(postsTable.id) })
+			.from(postsTable)
+			.innerJoin(usersTable, eq(postsTable.userId, usersTable.id));
+
+		const total = totalPosts[0]?.count ?? 0;
+
+		return {
+			posts,
+			pagination: {
+				page,
+				limit: safeLimit,
+				total: Math.ceil(total / safeLimit),
+			},
+		};
 	}
 
 	static async getPostById(id: number) {

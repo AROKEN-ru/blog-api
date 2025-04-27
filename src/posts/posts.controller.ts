@@ -11,14 +11,18 @@ import { createPost, updatePost } from "./posts.schema";
 const publicRoutes = new Elysia()
 	.get(
 		"/",
-		async () => {
-			const posts = await getAllPostsUseCase();
+		async ({ query: { page, limit } }) => {
+			const data = await getAllPostsUseCase({ page, limit });
 			return {
 				message: "Posts fetched successfully",
-				posts,
+				...data,
 			};
 		},
 		{
+			query: t.Object({
+				page: t.Optional(t.Number()),
+				limit: t.Optional(t.Number()),
+			}),
 			detail: {
 				description: "Get all posts.",
 			},
