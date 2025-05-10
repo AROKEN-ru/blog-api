@@ -14,7 +14,6 @@
 		"@elysiajs/jwt": "^1.2.0",
 		"@elysiajs/swagger": "^1.2.2",
 		"@libsql/client": "^0.15.4",
-		"@tqman/nice-logger": "^1.1.1",
 		"drizzle-orm": "^0.41.0",
 		"drizzle-typebox": "^0.3.2",
 		"elysia": "^1.2.25",

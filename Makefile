@@ -13,7 +13,6 @@ install-deps:
 install:
 	make install-bun \
 	&& make install-deps \
-	&& bun run db:generate \
 	&& bun run db:push
 
 dev:

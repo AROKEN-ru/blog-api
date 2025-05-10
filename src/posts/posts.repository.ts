@@ -59,7 +59,7 @@ export class PostsRepository {
 			pagination: {
 				page,
 				limit: safeLimit,
-				total: Math.ceil(total / safeLimit),
+				totalPages: Math.ceil(total / safeLimit),
 			},
 		};
 	}

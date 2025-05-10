@@ -1,6 +1,5 @@
 import cors from "@elysiajs/cors";
 import { swagger } from "@elysiajs/swagger";
-import { logger } from "@tqman/nice-logger";
 import Elysia from "elysia";
 
 import { authController } from "@/auth/auth.controller";
@@ -14,7 +13,6 @@ export const app = new Elysia()
 			credentials: true,
 		}),
 	)
-	.use(logger())
 	.use(
 		swagger({
 			path: "/api/docs",
